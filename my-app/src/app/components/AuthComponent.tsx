@@ -1,174 +1,236 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { redirect } from "next/navigation";
 import { useState } from "react";
-interface LoginPayload {
-  email: String;
-  password: String;
-}
-interface RegisterPayload {
-  fName: String;
-  lName: String;
-  email: String;
-  password: String;
-}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+//shadcn form validation
+const formSchema = z.object({
+  firstName: z.string().min(2, {
+    message: "First name must be at least 2 characters.",
+  }),
+  lastName: z.string().min(2, {
+    message: "Last name must be at least 2 characters.",
+  }),
+  email: z.string().email({}),
+  password: z.string().min(8, {}),
+});
 
 export const AuthComponent = () => {
-  const [loginClickedStyle, setLoginClickedStyle] = useState(false);
-  const [registerClickedStyle, setRegisterClickedStyle] = useState(false);
+  //shadcn form validation
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    },
+  });
 
-  const [loginDisplayed, setLoginDisplayed] = useState(false);
-  const [registerDisplayed, setRegisterDisplayed] = useState(false);
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values);
+  }
 
-  // login payload
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const handleLogin = async (e: any) => {
-    e.preventDefault();
-    const payload: LoginPayload = {
-      email: loginEmail,
-      password: loginPassword,
-    };
-
-    const response = await fetch("http://localhost:3000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ payload }),
-    });
-
-    console.log(response);
-    if (response.ok) {
-      redirect("/pages/dashboard");
-    }
-  };
-
-  const [fName, setFName] = useState("");
-  const [lName, setLName] = useState("");
-  const [registerEmail, setRegisterEmail] = useState("");
-  const [registerPassword, setRegisterPassword] = useState("");
-  const handleRegister = async (e: any) => {
-    e.preventDefault();
-    const payload: RegisterPayload = {
-      fName: fName,
-      lName: lName,
-      email: registerEmail,
-      password: registerPassword,
-    };
-    console.log;
-
-    // const response = await fetch("http://localhost:3000/api/auth/register", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ payload }),
-    // });
-
-    // console.log(response);
-  };
+  const [hasAccountAlready, setHasAccountAlready] = useState(false);
 
   return (
-    <div className="flex flex-row justify-center items-center min-h-screen">
-      <div className="flex flex-col w-full items-center">
-        <Button
-          variant={loginClickedStyle ? "default" : "outline"}
-          className="cursor-pointer w-full max-w-sm"
-          onClick={() => {
-            setLoginClickedStyle(true);
-            setRegisterClickedStyle(false);
-            setLoginDisplayed(true);
-            setRegisterDisplayed(false);
-          }}
-        >
-          Login
-        </Button>
-        <Button
-          variant={registerClickedStyle ? "default" : "outline"}
-          className="cursor-pointer mt-4 w-full max-w-sm"
-          onClick={() => {
-            setRegisterClickedStyle(true);
-            setLoginClickedStyle(false);
-            setRegisterDisplayed(true);
-            setLoginDisplayed(false);
-          }}
-        >
-          Register
-        </Button>
-      </div>
+    <>
+      <main className="flex h-screen justify-center items-center">
+        {!hasAccountAlready ? (
+          <Card className="mx-auto max-w-sm p-5">
+            <CardHeader>
+              <CardTitle className="text-xl text-center">Register</CardTitle>
+            </CardHeader>
+            <CardDescription className="text-center">
+              Enter your information to create an account
+            </CardDescription>
+            <CardContent>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-8"
+                >
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>First Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="first name" {...field} />
+                          </FormControl>
 
-      <div className="flex flex-col w-full items-center">
-        {loginDisplayed ? (
-          <form className="flex flex-col" onSubmit={handleLogin}>
-            <input
-              placeholder="Email"
-              value={loginEmail}
-              onChange={(e) => {
-                setLoginEmail(e.target.value);
-              }}
-              className="border p-2 rounded w-full"
-            />
-            <input
-              placeholder="Password"
-              value={loginPassword}
-              onChange={(e) => {
-                setLoginPassword(e.target.value);
-              }}
-              className="border p-2 rounded w-full mt-2"
-            />
-            <button
-              type="submit"
-              className="border rounded p-2 w-full mt-5 hover:bg-blue-500 cursor-pointer"
-            >
-              Login
-            </button>
-          </form>
-        ) : null}
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Last Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="last name" {...field} />
+                          </FormControl>
 
-        {registerDisplayed ? (
-          <form className="flex flex-col" onSubmit={handleRegister}>
-            <input
-              placeholder="First name"
-              value={fName}
-              onChange={(e) => {
-                setFName(e.target.value);
-              }}
-              className="border p-2 rounded w-full"
-            />
-            <input
-              placeholder="Last name"
-              value={lName}
-              onChange={(e) => {
-                setLName(e.target.value);
-              }}
-              className="border p-2 rounded w-full mt-2"
-            />
-            <input
-              placeholder="Enter your email"
-              value={registerEmail}
-              onChange={(e) => {
-                setRegisterEmail(e.target.value);
-              }}
-              className="border p-2 rounded w-full mt-2"
-            />
-            <input
-              placeholder="Create account password"
-              value={registerPassword}
-              onChange={(e) => {
-                setRegisterPassword(e.target.value);
-              }}
-              className="border p-2 rounded w-full mt-2"
-            />
-            <button
-              type="submit"
-              className="border rounded p-2 w-full mt-5 hover:bg-blue-500 cursor-pointer"
-            >
-              Register
-            </button>
-          </form>
-        ) : null}
-      </div>
-    </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="grid col-span-2">
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input placeholder="email" {...field} />
+                            </FormControl>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="grid col-span-2">
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Password</FormLabel>
+                            <FormControl>
+                              <Input placeholder="password" {...field} />
+                            </FormControl>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />{" "}
+                    </div>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full max-w-sm cursor-pointer"
+                  >
+                    Register
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+            <CardFooter>
+              Already have an account?
+              <Button
+                variant={"outline"}
+                className="mx-auto cursor-pointer"
+                onClick={() => {
+                  setHasAccountAlready(true);
+                }}
+              >
+                Login
+              </Button>
+            </CardFooter>
+          </Card>
+        ) : (
+          <Card className="mx-auto max-w-sm p-5">
+            <CardHeader>
+              <CardTitle className="text-xl text-center">Login</CardTitle>
+            </CardHeader>
+            <CardDescription className="text-center">
+              Enter account information to login
+            </CardDescription>
+            <CardContent>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-8"
+                >
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="grid col-span-2">
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input placeholder="email" {...field} />
+                            </FormControl>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="grid col-span-2">
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Password</FormLabel>
+                            <FormControl>
+                              <Input placeholder="password" {...field} />
+                            </FormControl>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />{" "}
+                    </div>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full max-w-sm cursor-pointer"
+                  >
+                    Login
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+            <CardFooter>
+              Don't have an account?
+              <Button
+                variant={"outline"}
+                className="mx-4 cursor-pointer"
+                onClick={() => {
+                  setHasAccountAlready(false);
+                }}
+              >
+                Register
+              </Button>
+            </CardFooter>
+          </Card>
+        )}
+      </main>
+    </>
   );
 };
