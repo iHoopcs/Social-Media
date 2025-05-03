@@ -69,7 +69,7 @@ export const AuthComponent = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
-    registerForm.reset();
+    lo.reset();
   }
 
   const [hasAccountAlready, setHasAccountAlready] = useState(false);
@@ -78,7 +78,7 @@ export const AuthComponent = () => {
     <>
       <main className="flex h-screen justify-center items-center">
         {!hasAccountAlready ? (
-          <Card className="mx-auto max-w-sm p-5">
+          <Card className="mx-auto max-w-sm p-5 ">
             <CardHeader>
               <CardTitle className="text-xl text-center">Register</CardTitle>
             </CardHeader>
