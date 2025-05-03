@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/card";
 
 //shadcn form validation
-const formSchema = z.object({
+const registerSchema = z.object({
   firstName: z.string().min(2, {
     message: "First name must be at least 2 characters.",
   }),
@@ -34,11 +34,15 @@ const formSchema = z.object({
   email: z.string().email({}),
   password: z.string().min(8, {}),
 });
+const loginSchema = z.object({
+  email: z.string().email({}),
+  password: z.string().min(8, {}),
+});
 
 export const AuthComponent = () => {
   //shadcn form validation
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const registerForm = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -46,12 +50,26 @@ export const AuthComponent = () => {
       password: "",
     },
   });
+  const loginForm = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function handleRegister(values: z.infer<typeof registerSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    registerForm.reset();
+  }
+  function handleLogin(values: z.infer<typeof loginSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values);
+    registerForm.reset();
   }
 
   const [hasAccountAlready, setHasAccountAlready] = useState(false);
@@ -68,14 +86,14 @@ export const AuthComponent = () => {
               Enter your information to create an account
             </CardDescription>
             <CardContent>
-              <Form {...form}>
+              <Form {...registerForm}>
                 <form
-                  onSubmit={form.handleSubmit(onSubmit)}
+                  onSubmit={registerForm.handleSubmit(handleRegister)}
                   className="space-y-8"
                 >
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
-                      control={form.control}
+                      control={registerForm.control}
                       name="firstName"
                       render={({ field }) => (
                         <FormItem>
@@ -89,7 +107,7 @@ export const AuthComponent = () => {
                       )}
                     />
                     <FormField
-                      control={form.control}
+                      control={registerForm.control}
                       name="lastName"
                       render={({ field }) => (
                         <FormItem>
@@ -104,7 +122,7 @@ export const AuthComponent = () => {
                     />
                     <div className="grid col-span-2">
                       <FormField
-                        control={form.control}
+                        control={registerForm.control}
                         name="email"
                         render={({ field }) => (
                           <FormItem>
@@ -120,7 +138,7 @@ export const AuthComponent = () => {
                     </div>
                     <div className="grid col-span-2">
                       <FormField
-                        control={form.control}
+                        control={registerForm.control}
                         name="password"
                         render={({ field }) => (
                           <FormItem>
@@ -167,15 +185,15 @@ export const AuthComponent = () => {
               Enter account information to login
             </CardDescription>
             <CardContent>
-              <Form {...form}>
+              <Form {...loginForm}>
                 <form
-                  onSubmit={form.handleSubmit(onSubmit)}
+                  onSubmit={loginForm.handleSubmit(handleLogin)}
                   className="space-y-8"
                 >
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid col-span-2">
                       <FormField
-                        control={form.control}
+                        control={loginForm.control}
                         name="email"
                         render={({ field }) => (
                           <FormItem>
@@ -191,7 +209,7 @@ export const AuthComponent = () => {
                     </div>
                     <div className="grid col-span-2">
                       <FormField
-                        control={form.control}
+                        control={loginForm.control}
                         name="password"
                         render={({ field }) => (
                           <FormItem>
