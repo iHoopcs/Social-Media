@@ -40,6 +40,9 @@ const loginSchema = z.object({
 });
 
 export const AuthComponent = () => {
+  const [displayMsg, setDisplayMsg] = useState("");
+  const [hasAccountAlready, setHasAccountAlready] = useState(false);
+
   //shadcn form validation
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -59,20 +62,43 @@ export const AuthComponent = () => {
   });
 
   // 2. Define a submit handler.
-  function handleRegister(values: z.infer<typeof registerSchema>) {
+  async function handleRegister(values: z.infer<typeof registerSchema>) {
+    console.log(values);
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
-    registerForm.reset();
-  }
-  function handleLogin(values: z.infer<typeof loginSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    lo.reset();
-  }
+    const response = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ payload: values }),
+    });
+    console.log(response);
 
-  const [hasAccountAlready, setHasAccountAlready] = useState(false);
+    if (!response.ok)
+      setDisplayMsg("Account already exists with provided email");
+    else {
+      registerForm.reset();
+      setHasAccountAlready(true);
+      setDisplayMsg("Account created!");
+    }
+  }
+  async function handleLogin(values: z.infer<typeof loginSchema>) {
+    console.log(values);
+
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ values }),
+    });
+    console.log(response);
+
+    //loginForm.reset();
+  }
 
   return (
     <>
@@ -152,6 +178,14 @@ export const AuthComponent = () => {
                         )}
                       />{" "}
                     </div>
+
+                    <div className="grid col-span-2">
+                      {displayMsg ? (
+                        <span className="text-red-400 text-sm text-center mt-2">
+                          *{displayMsg}*
+                        </span>
+                      ) : null}
+                    </div>
                   </div>
 
                   <Button
@@ -191,6 +225,13 @@ export const AuthComponent = () => {
                   className="space-y-8"
                 >
                   <div className="grid grid-cols-2 gap-4">
+                    <div className="grid col-span-2">
+                      {displayMsg ? (
+                        <span className="text-green-600 text-sm text-center mt-2">
+                          *{displayMsg}*
+                        </span>
+                      ) : null}
+                    </div>
                     <div className="grid col-span-2">
                       <FormField
                         control={loginForm.control}

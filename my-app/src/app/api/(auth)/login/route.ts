@@ -3,6 +3,7 @@ import { connectMongoDB } from "./../../../../lib/mongodb";
 import User from "../../../../../models/user";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function POST(request: Request) {
   const { payload } = await request.json();
@@ -25,7 +26,8 @@ export async function POST(request: Request) {
           maxAge: 60 * 60 * 24, // 1 day
           path: "/",
         });
-        return new Response("Logged in!", { status: 200 });
+
+        return new Response("Authenticated!", { status: 200 });
       }
       return new Response("Incorrect Password", { status: 401 });
     }

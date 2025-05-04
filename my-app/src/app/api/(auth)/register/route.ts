@@ -1,11 +1,12 @@
-"user server";
+"use server";
 import { connectMongoDB } from "./../../../../lib/mongodb";
 import User from "../../../../../models/user";
 import bcrypt from "bcrypt";
 
 export async function POST(request: Request) {
   const { payload } = await request.json();
-  if (!payload) return new Error("Missing payload data");
+  console.log(payload);
+  if (!payload) return new Response("Error in payload", { status: 500 });
 
   try {
     await connectMongoDB();
