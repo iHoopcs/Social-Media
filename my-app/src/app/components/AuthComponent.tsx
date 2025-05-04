@@ -214,6 +214,7 @@ export const AuthComponent = () => {
               className="mx-auto cursor-pointer w-full"
               onClick={() => {
                 setHasAccountAlready(true);
+                setDisplayMsg("");
               }}
             >
               Login
@@ -296,6 +297,7 @@ export const AuthComponent = () => {
               className="mx-auto cursor-pointer w-full"
               onClick={() => {
                 setHasAccountAlready(false);
+                setDisplayMsg("");
               }}
             >
               Register
