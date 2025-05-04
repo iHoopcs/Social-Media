@@ -93,202 +93,215 @@ export const AuthComponent = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ values }),
+      body: JSON.stringify({ payload: values }),
     });
     console.log(response);
 
-    //loginForm.reset();
+    if (response.status === 400)
+      setDisplayMsg("Could not find account with provided email");
+    else if (response.status === 401) {
+      setDisplayMsg("Incorrect password");
+    } else {
+      //200 success
+      loginForm.reset();
+    }
   }
 
   return (
     <>
       <main className="flex h-screen justify-center items-center">
-        {!hasAccountAlready ? (
-          <Card className="mx-auto max-w-sm p-5 ">
-            <CardHeader>
-              <CardTitle className="text-xl text-center">Register</CardTitle>
-            </CardHeader>
-            <CardDescription className="text-center">
-              Enter your information to create an account
-            </CardDescription>
-            <CardContent>
-              <Form {...registerForm}>
-                <form
-                  onSubmit={registerForm.handleSubmit(handleRegister)}
-                  className="space-y-8"
-                >
-                  <div className="grid grid-cols-2 gap-4">
+        <Card
+          className={`mx-auto max-w-sm p-5 w-full ${
+            !hasAccountAlready ? "block" : "hidden"
+          }`}
+        >
+          <CardHeader>
+            <CardTitle className="text-xl text-center mb-2">Register</CardTitle>
+          </CardHeader>
+          <CardDescription className="text-center mb-5">
+            Enter your information to create an account
+          </CardDescription>
+          <CardContent>
+            <Form {...registerForm}>
+              <form
+                onSubmit={registerForm.handleSubmit(handleRegister)}
+                className="space-y-8"
+              >
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={registerForm.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>First Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="first name" {...field} />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={registerForm.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="last name" {...field} />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="grid col-span-2">
                     <FormField
                       control={registerForm.control}
-                      name="firstName"
+                      name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>First Name</FormLabel>
+                          <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <Input placeholder="first name" {...field} />
+                            <Input placeholder="email" {...field} />
                           </FormControl>
 
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                  </div>
+                  <div className="grid col-span-2">
                     <FormField
                       control={registerForm.control}
-                      name="lastName"
+                      name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Last Name</FormLabel>
+                          <FormLabel>Password</FormLabel>
                           <FormControl>
-                            <Input placeholder="last name" {...field} />
+                            <Input placeholder="password" {...field} />
+                          </FormControl>
+
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />{" "}
+                  </div>
+
+                  <div className="grid col-span-2">
+                    {displayMsg ? (
+                      <span className="text-red-400 text-sm text-center mt-2">
+                        *{displayMsg}*
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full max-w-sm cursor-pointer "
+                >
+                  Register
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+          <CardFooter className="grid col-span-2 justify-center gap-4 p-5">
+            Already have an account?
+            <Button
+              variant={"outline"}
+              className="mx-auto cursor-pointer w-full"
+              onClick={() => {
+                setHasAccountAlready(true);
+              }}
+            >
+              Login
+            </Button>
+          </CardFooter>
+        </Card>
+
+        <Card
+          className={`mx-auto max-w-sm p-5 w-full ${
+            hasAccountAlready ? "block" : "hidden"
+          }`}
+        >
+          <CardHeader>
+            <CardTitle className="text-xl text-center mb-2">Login</CardTitle>
+          </CardHeader>
+          <CardDescription className="text-center mb-3">
+            Enter account information to login
+          </CardDescription>
+          <CardContent>
+            <Form {...loginForm}>
+              <form
+                onSubmit={loginForm.handleSubmit(handleLogin)}
+                className="space-y-8"
+              >
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid col-span-2">
+                    {displayMsg ? (
+                      <span className="text-green-600 text-sm text-center mt-2">
+                        *{displayMsg}*
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="grid col-span-2">
+                    <FormField
+                      control={loginForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input placeholder="email" {...field} />
                           </FormControl>
 
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    <div className="grid col-span-2">
-                      <FormField
-                        control={registerForm.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                              <Input placeholder="email" {...field} />
-                            </FormControl>
-
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    <div className="grid col-span-2">
-                      <FormField
-                        control={registerForm.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                              <Input placeholder="password" {...field} />
-                            </FormControl>
-
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />{" "}
-                    </div>
-
-                    <div className="grid col-span-2">
-                      {displayMsg ? (
-                        <span className="text-red-400 text-sm text-center mt-2">
-                          *{displayMsg}*
-                        </span>
-                      ) : null}
-                    </div>
                   </div>
+                  <div className="grid col-span-2">
+                    <FormField
+                      control={loginForm.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input placeholder="password" {...field} />
+                          </FormControl>
 
-                  <Button
-                    type="submit"
-                    className="w-full max-w-sm cursor-pointer"
-                  >
-                    Register
-                  </Button>
-                </form>
-              </Form>
-            </CardContent>
-            <CardFooter>
-              Already have an account?
-              <Button
-                variant={"outline"}
-                className="mx-auto cursor-pointer"
-                onClick={() => {
-                  setHasAccountAlready(true);
-                }}
-              >
-                Login
-              </Button>
-            </CardFooter>
-          </Card>
-        ) : (
-          <Card className="mx-auto max-w-sm p-5">
-            <CardHeader>
-              <CardTitle className="text-xl text-center">Login</CardTitle>
-            </CardHeader>
-            <CardDescription className="text-center">
-              Enter account information to login
-            </CardDescription>
-            <CardContent>
-              <Form {...loginForm}>
-                <form
-                  onSubmit={loginForm.handleSubmit(handleLogin)}
-                  className="space-y-8"
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full max-w-sm cursor-pointer"
                 >
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid col-span-2">
-                      {displayMsg ? (
-                        <span className="text-green-600 text-sm text-center mt-2">
-                          *{displayMsg}*
-                        </span>
-                      ) : null}
-                    </div>
-                    <div className="grid col-span-2">
-                      <FormField
-                        control={loginForm.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                              <Input placeholder="email" {...field} />
-                            </FormControl>
-
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    <div className="grid col-span-2">
-                      <FormField
-                        control={loginForm.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                              <Input placeholder="password" {...field} />
-                            </FormControl>
-
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />{" "}
-                    </div>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full max-w-sm cursor-pointer"
-                  >
-                    Login
-                  </Button>
-                </form>
-              </Form>
-            </CardContent>
-            <CardFooter>
-              Don't have an account?
-              <Button
-                variant={"outline"}
-                className="mx-4 cursor-pointer"
-                onClick={() => {
-                  setHasAccountAlready(false);
-                }}
-              >
-                Register
-              </Button>
-            </CardFooter>
-          </Card>
-        )}
+                  Login
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+          <CardFooter className="grid col-span-2 justify-center gap-4 p-5">
+            Don't have an account?
+            <Button
+              variant={"outline"}
+              className="mx-auto cursor-pointer w-full"
+              onClick={() => {
+                setHasAccountAlready(false);
+              }}
+            >
+              Register
+            </Button>
+          </CardFooter>
+        </Card>
       </main>
     </>
   );

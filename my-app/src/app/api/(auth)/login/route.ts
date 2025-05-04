@@ -29,10 +29,10 @@ export async function POST(request: Request) {
 
         return new Response("Authenticated!", { status: 200 });
       }
-      return new Response("Incorrect Password", { status: 401 });
+      return new Response("Incorrect password", { status: 401 });
     }
     return new Response("Could not find account with provided email", {
-      status: 401,
+      status: 400,
     });
   } catch (err) {
     console.log(err);
