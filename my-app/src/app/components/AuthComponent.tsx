@@ -22,6 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 //shadcn form validation
 const registerSchema = z.object({
@@ -40,9 +41,10 @@ const loginSchema = z.object({
 });
 
 export const AuthComponent = () => {
-  const [displayMsg, setDisplayMsg] = useState("");
+  const router = useRouter();
+  const [accountIsCreatedMsg, setAccountIsCreatedMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [hasAccountAlready, setHasAccountAlready] = useState(false);
-
   //shadcn form validation
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -63,47 +65,59 @@ export const AuthComponent = () => {
 
   // 2. Define a submit handler.
   async function handleRegister(values: z.infer<typeof registerSchema>) {
+    //clear error msg
+    setErrorMsg("");
     console.log(values);
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    const response = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ payload: values }),
-    });
-    console.log(response);
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ payload: values }),
+      });
+      console.log(response);
 
-    if (!response.ok)
-      setDisplayMsg("Account already exists with provided email");
-    else {
-      registerForm.reset();
-      setHasAccountAlready(true);
-      setDisplayMsg("Account created!");
+      if (!response.ok)
+        setErrorMsg("Account already exists with provided email");
+      else {
+        registerForm.reset();
+        setHasAccountAlready(true);
+        setAccountIsCreatedMsg("Account created!");
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
   async function handleLogin(values: z.infer<typeof loginSchema>) {
+    //clear error msg
+    setErrorMsg("");
     console.log(values);
 
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    const response = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ payload: values }),
-    });
-    console.log(response);
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ payload: values }),
+      });
+      console.log(response);
 
-    if (response.status === 400)
-      setDisplayMsg("Could not find account with provided email");
-    else if (response.status === 401) {
-      setDisplayMsg("Incorrect password");
-    } else {
-      //200 success
-      loginForm.reset();
+      if (response.status === 400)
+        setErrorMsg("Could not find account with provided email");
+      else if (response.status === 401) {
+        setErrorMsg("Incorrect password");
+      } else {
+        //200 success
+        router.push("/pages/dashboard");
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -190,9 +204,9 @@ export const AuthComponent = () => {
                   </div>
 
                   <div className="grid col-span-2">
-                    {displayMsg ? (
+                    {errorMsg ? (
                       <span className="text-red-400 text-sm text-center mt-2">
-                        *{displayMsg}*
+                        *{errorMsg}*
                       </span>
                     ) : null}
                   </div>
@@ -214,7 +228,8 @@ export const AuthComponent = () => {
               className="mx-auto cursor-pointer w-full"
               onClick={() => {
                 setHasAccountAlready(true);
-                setDisplayMsg("");
+                setErrorMsg("");
+                setAccountIsCreatedMsg("");
               }}
             >
               Login
@@ -241,9 +256,9 @@ export const AuthComponent = () => {
               >
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid col-span-2">
-                    {displayMsg ? (
+                    {accountIsCreatedMsg ? (
                       <span className="text-green-600 text-sm text-center mt-2">
-                        *{displayMsg}*
+                        *{accountIsCreatedMsg}*
                       </span>
                     ) : null}
                   </div>
@@ -281,6 +296,14 @@ export const AuthComponent = () => {
                   </div>
                 </div>
 
+                <div className="grid col-span-2">
+                  {errorMsg ? (
+                    <span className="text-red-400 text-sm text-center mt-2">
+                      *{errorMsg}*
+                    </span>
+                  ) : null}
+                </div>
+
                 <Button
                   type="submit"
                   className="w-full max-w-sm cursor-pointer"
@@ -297,7 +320,7 @@ export const AuthComponent = () => {
               className="mx-auto cursor-pointer w-full"
               onClick={() => {
                 setHasAccountAlready(false);
-                setDisplayMsg("");
+                setErrorMsg("");
               }}
             >
               Register

@@ -3,6 +3,7 @@ import User from "../../../../../models/user";
 
 //user verification once authenticated
 export async function GET(request: Request) {
+  //check that session created stored in cookie
   const cookieStore = await cookies();
   console.log("Store", cookieStore);
   const session = cookieStore.get("session")?.value;

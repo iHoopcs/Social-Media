@@ -3,8 +3,7 @@ import { connectMongoDB } from "./../../../../lib/mongodb";
 import User from "../../../../../models/user";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-
+  
 export async function POST(request: Request) {
   const { payload } = await request.json();
   if (!payload) return new Error("Missing payload data");
@@ -12,7 +11,6 @@ export async function POST(request: Request) {
   try {
     await connectMongoDB();
     const foundUser = await User.findOne({ email: payload.email });
-
     if (foundUser) {
       //check password
       const isMatch = await bcrypt.compare(
