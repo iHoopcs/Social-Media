@@ -7,6 +7,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function DashboardLayout({
   children,
@@ -20,17 +31,36 @@ export default function DashboardLayout({
         <span>
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <IoIosLogOut
-                  size={30}
-                  className="hover:text-red-600 cursor-pointer"
-                  onClick={handleLogout}
-                />
-              </TooltipTrigger>
-
-              <TooltipContent>
-                <p className="text-sm">Logout?</p>
-              </TooltipContent>
+              <AlertDialog>
+                <TooltipTrigger asChild>
+                  <AlertDialogTrigger asChild>
+                    <IoIosLogOut
+                      size={30}
+                      className="hover:text-red-600 cursor-pointer"
+                    />
+                  </AlertDialogTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-sm">Logout?</p>
+                </TooltipContent>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your account and remove your data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="cursor-pointer">
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction className="cursor-pointer">
+                      Logout
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </Tooltip>
           </TooltipProvider>
         </span>
