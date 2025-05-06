@@ -46,16 +46,18 @@ export default function DashboardLayout({
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                    <AlertDialogDescription className="mb-2 mt-2">
-                      You will be logged out of your account and prompted to log
-                      in again.
+                    <AlertDialogDescription>
+                      You will be logged out and prompted to log back in.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel className="cursor-pointer">
                       Cancel
                     </AlertDialogCancel>
-                    <AlertDialogAction className="cursor-pointer">
+                    <AlertDialogAction
+                      className="cursor-pointer"
+                      onClick={handleLogout}
+                    >
                       Logout
                     </AlertDialogAction>
                   </AlertDialogFooter>
