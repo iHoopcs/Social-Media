@@ -5,8 +5,8 @@ import User from "../../models/user";
 export async function getUserFromSession() {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get("session")?.value;
-  console.log("ID:", sessionId);
-  console.log("Cookie Store", cookieStore);
+  // console.log("ID:", sessionId);
+  // console.log("Cookie Store", cookieStore);
   if (!sessionId) return null;
 
   try {

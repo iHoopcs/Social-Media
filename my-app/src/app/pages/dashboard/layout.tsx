@@ -1,4 +1,5 @@
 "use client";
+import { handleLogout } from "@/app/components/LogoutComponent";
 import { IoIosLogOut } from "react-icons/io";
 import {
   Tooltip,
@@ -23,8 +24,10 @@ export default function DashboardLayout({
                 <IoIosLogOut
                   size={30}
                   className="hover:text-red-600 cursor-pointer"
+                  onClick={handleLogout}
                 />
               </TooltipTrigger>
+
               <TooltipContent>
                 <p className="text-sm">Logout?</p>
               </TooltipContent>
@@ -32,6 +35,7 @@ export default function DashboardLayout({
           </TooltipProvider>
         </span>
       </header>
+
       <main className="flex-1">{children}</main>
     </div>
   );
