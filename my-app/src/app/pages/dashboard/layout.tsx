@@ -46,9 +46,9 @@ export default function DashboardLayout({
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your account and remove your data from our servers.
+                    <AlertDialogDescription className="mb-2 mt-2">
+                      You will be logged out of your account and prompted to log
+                      in again.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
