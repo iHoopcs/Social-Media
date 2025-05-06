@@ -5,7 +5,7 @@ export default async function Dashboard() {
   console.log("User from session:", user);
 
   if (!user) return <p>Unauthorized!</p>;
-
+  
   return (
     <>
       <h1>

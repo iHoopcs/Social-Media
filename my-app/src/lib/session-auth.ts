@@ -6,8 +6,13 @@ export async function getUserFromSession() {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get("session")?.value;
   console.log("ID:", sessionId);
+  console.log("Cookie Store", cookieStore);
   if (!sessionId) return null;
-  const user = await User.findOne({ _id: sessionId }).lean();
 
-  return user || null;
+  try {
+    const user = await User.findOne({ _id: sessionId }).lean();
+    return user || null;
+  } catch (err) {
+    return err;
+  }
 }
