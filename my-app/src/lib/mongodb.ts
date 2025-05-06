@@ -4,7 +4,7 @@ export const connectMongoDB = async () => {
   const uri: string | undefined = process.env.MONGODB_URI;
 
   if (!uri) {
-    throw new Error("MONGODB URI variable not found");
+    throw new Error("Database connection error");
   }
   try {
     await mongoose.connect(uri);

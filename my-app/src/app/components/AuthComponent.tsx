@@ -44,7 +44,7 @@ export const AuthComponent = () => {
   const router = useRouter();
   const [accountIsCreatedMsg, setAccountIsCreatedMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [hasAccountAlready, setHasAccountAlready] = useState(false);
+  const [hasAccountAlready, setHasAccountAlready] = useState(true);
   //shadcn form validation
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -112,6 +112,8 @@ export const AuthComponent = () => {
         setErrorMsg("Could not find account with provided email");
       else if (response.status === 401) {
         setErrorMsg("Incorrect password");
+      } else if (response.status === 500) {
+        setErrorMsg("Error logging in");
       } else {
         //200 success
         router.push("/pages/dashboard");
