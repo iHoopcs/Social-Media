@@ -1,4 +1,4 @@
-"use server";
+"use client";
 import {
   Sidebar,
   SidebarContent,
@@ -14,8 +14,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -39,7 +37,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { handleLogout } from "@/app/components/LogoutComponent";
 import { Button } from "@/components/ui/button";
-import { getUserFromSession } from "@/lib/session-auth";
 import { redirect } from "next/navigation";
 
 // Menu items.
@@ -71,9 +68,9 @@ const items = [
   },
 ];
 
-export const DashboardSidebar = async () => {
-  const user = await getUserFromSession();
-  if (!user) redirect("/");
+export const DashboardSidebar = ({ user }: { user: any }) => {
+  const data = user ? JSON.parse(user) : {}; //parse JSON user prop
+  if (!data) redirect("/");
 
   return (
     <Sidebar>
@@ -97,7 +94,7 @@ export const DashboardSidebar = async () => {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* <SidebarFooter>
+      <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem className="text-center">
             <Button className="rounded-2xl cursor-pointer mb-5 w-full max-w-sm">
@@ -109,7 +106,7 @@ export const DashboardSidebar = async () => {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="cursor-pointer">
                   <span className="text-lg font-sans">
-                    {user.firstName} {user.lastName}
+                    {data.firstName} {data.lastName}
                   </span>
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
@@ -124,7 +121,13 @@ export const DashboardSidebar = async () => {
 
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <DropdownMenuItem className="cursor-pointer">
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      onSelect={(e) => {
+                        //stop auto close
+                        e.preventDefault();
+                      }}
+                    >
                       <span>Logout</span>
                     </DropdownMenuItem>
                   </AlertDialogTrigger>
@@ -153,7 +156,7 @@ export const DashboardSidebar = async () => {
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
-      </SidebarFooter> */}
+      </SidebarFooter>
     </Sidebar>
   );
 };
