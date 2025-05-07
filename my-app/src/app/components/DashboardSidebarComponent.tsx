@@ -26,20 +26,10 @@ import {
   Search,
   Settings,
 } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { handleLogout } from "@/app/components/LogoutComponent";
-import { Button } from "@/components/ui/button";
+
 import { redirect } from "next/navigation";
+import { NewPostDialog } from "./NewPostDialog";
+import { LogoutDialog } from "./LogoutDialog";
 
 // Menu items.
 const items = [
@@ -100,36 +90,10 @@ export const DashboardSidebar = ({ user }: { user: any }) => {
         <SidebarMenu>
           {/* New Post Button */}
           <SidebarMenuItem className="text-center">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button className="rounded-2xl cursor-pointer mb-5 w-full max-w-sm">
-                  New Post?
-                </Button>
-              </AlertDialogTrigger>
-
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="text-center">
-                    New Social Media Post
-                  </AlertDialogTitle>
-                  <AlertDialogDescription className="text-center">
-                    You will be logged out and prompted to log back in.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-
-                <AlertDialogFooter>
-                  <AlertDialogCancel className="cursor-pointer">
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction className="cursor-pointer">
-                    Create Post
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <NewPostDialog data={data} />
           </SidebarMenuItem>
 
-          {/* User control */}
+          {/* User control dropdown */}
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -147,42 +111,7 @@ export const DashboardSidebar = ({ user }: { user: any }) => {
                     Account <User className="mx-5" />
                   </span>
                 </DropdownMenuItem>
-
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <DropdownMenuItem
-                      className="cursor-pointer"
-                      onSelect={(e) => {
-                        //stop auto close
-                        e.preventDefault();
-                      }}
-                    >
-                      <span className="flex flex-row items-center w-full justify-between ">
-                        Logout <LogOut className="mx-5" />
-                      </span>
-                    </DropdownMenuItem>
-                  </AlertDialogTrigger>
-
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        You will be logged out and prompted to log back in.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel className="cursor-pointer">
-                        Cancel
-                      </AlertDialogCancel>
-                      <AlertDialogAction
-                        className="cursor-pointer"
-                        onClick={handleLogout}
-                      >
-                        Logout
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                <LogoutDialog />
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>

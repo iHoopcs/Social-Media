@@ -10,7 +10,7 @@ export default async function DashboardLayout({
 }) {
   const user = JSON.stringify(await getUserFromSession());
   if (!user) redirect("/");
-  console.log(user);
+  //console.log(user);
   return (
     <div className="flex flex-col min-h-screen">
       <SidebarProvider defaultOpen>

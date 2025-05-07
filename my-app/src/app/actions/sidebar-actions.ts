@@ -7,3 +7,4 @@ export const handleLogout = async () => {
   (await cookies()).delete("session");
   redirect("/");
 };
+
