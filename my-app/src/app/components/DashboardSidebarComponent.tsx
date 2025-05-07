@@ -17,6 +17,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  User,
+  LogOut,
   UsersIcon,
   ChevronUp,
   Home,
@@ -96,18 +98,43 @@ export const DashboardSidebar = ({ user }: { user: any }) => {
 
       <SidebarFooter>
         <SidebarMenu>
+          {/* New Post Button */}
           <SidebarMenuItem className="text-center">
-            <Button className="rounded-2xl cursor-pointer mb-5 w-full max-w-sm">
-              New Post?
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button className="rounded-2xl cursor-pointer mb-5 w-full max-w-sm">
+                  New Post?
+                </Button>
+              </AlertDialogTrigger>
+
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-center">
+                    New Social Media Post
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-center">
+                    You will be logged out and prompted to log back in.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="cursor-pointer">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction className="cursor-pointer">
+                    Create Post
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </SidebarMenuItem>
+
+          {/* User control */}
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="cursor-pointer">
-                  <span className="text-lg font-sans">
-                    {data.firstName} {data.lastName}
-                  </span>
+                  <span className="text-lg font-sans">{data.displayName}</span>
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -116,7 +143,9 @@ export const DashboardSidebar = ({ user }: { user: any }) => {
                 className="w-[--radix-popper-anchor-width]"
               >
                 <DropdownMenuItem className="cursor-pointer">
-                  <span>Account</span>
+                  <span className="flex flex-row items-center w-full ">
+                    Account <User className="mx-5" />
+                  </span>
                 </DropdownMenuItem>
 
                 <AlertDialog>
@@ -128,7 +157,9 @@ export const DashboardSidebar = ({ user }: { user: any }) => {
                         e.preventDefault();
                       }}
                     >
-                      <span>Logout</span>
+                      <span className="flex flex-row items-center w-full justify-between ">
+                        Logout <LogOut className="mx-5" />
+                      </span>
                     </DropdownMenuItem>
                   </AlertDialogTrigger>
 
