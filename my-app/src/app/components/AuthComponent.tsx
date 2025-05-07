@@ -11,6 +11,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
@@ -34,6 +35,7 @@ const registerSchema = z.object({
   }),
   email: z.string().email({}),
   password: z.string().min(8, {}),
+  displayName: z.string().min(8, {}),
 });
 const loginSchema = z.object({
   email: z.string().email({}),
@@ -53,6 +55,7 @@ export const AuthComponent = () => {
       lastName: "",
       email: "",
       password: "",
+      displayName: "",
     },
   });
   const loginForm = useForm<z.infer<typeof loginSchema>>({
@@ -202,7 +205,26 @@ export const AuthComponent = () => {
                           <FormMessage />
                         </FormItem>
                       )}
-                    />{" "}
+                    />
+                  </div>
+                  <div className="grid col-span-2">
+                    <FormField
+                      control={registerForm.control}
+                      name="displayName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Display Name</FormLabel>
+                          <FormDescription>
+                            This will be visible to others.
+                          </FormDescription>
+                          <FormControl>
+                            <Input placeholder="display name" {...field} />
+                          </FormControl>
+
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
 
                   <div className="grid col-span-2">

@@ -3,7 +3,7 @@ import { connectMongoDB } from "./../../../../lib/mongodb";
 import User from "../../../../../models/user";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
-  
+
 export async function POST(request: Request) {
   const { payload } = await request.json();
   if (!payload) return new Error("Missing payload data");

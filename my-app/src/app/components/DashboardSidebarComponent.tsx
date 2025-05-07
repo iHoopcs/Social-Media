@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Calendar,
+  UsersIcon,
   ChevronUp,
   Home,
   Inbox,
@@ -47,14 +47,14 @@ const items = [
     icon: Home,
   },
   {
-    title: "Inbox",
+    title: "Messages",
     url: "#",
     icon: Inbox,
   },
   {
-    title: "Calendar",
+    title: "Friends",
     url: "#",
-    icon: Calendar,
+    icon: UsersIcon,
   },
   {
     title: "Search",
@@ -76,7 +76,7 @@ export const DashboardSidebar = ({ user }: { user: any }) => {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Social Media</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

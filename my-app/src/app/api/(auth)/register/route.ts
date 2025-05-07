@@ -28,6 +28,7 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(payload.password, 10);
 
     await User.create({
+      displayName: payload.displayName,
       firstName: payload.firstName,
       lastName: payload.lastName,
       email: payload.email,
@@ -42,5 +43,6 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.log(err);
+    return new Response("Internal server error", { status: 500 });
   }
 }
