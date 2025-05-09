@@ -2,6 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/app/components/DashboardSidebarComponent";
 import { getUserFromSession } from "@/lib/session-auth";
 import { redirect } from "next/navigation";
+import { Toaster } from "sonner";
 
 export default async function DashboardLayout({
   children,
@@ -19,6 +20,12 @@ export default async function DashboardLayout({
           <SidebarTrigger size={"lg"} className="cursor-pointer" />
 
           <main className="flex-1 p-4">{children}</main>
+          <Toaster
+            position="top-right"
+            theme="dark"
+            duration={8000}
+            closeButton
+          />
         </div>
       </SidebarProvider>
     </div>

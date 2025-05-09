@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createNewPost } from "../actions/sidebar-actions";
+import { toast } from "sonner";
 
 const commentSchema = z.object({
   commentedBy: z.string(),
@@ -37,7 +37,7 @@ export const postSchema = z.object({
   postedBy: z.string().min(2),
   title: z
     .string()
-    .min(8, { message: "Title must be at least 8 characters" })
+    .min(5, { message: "Title must be at least 5 characters" })
     .max(20, { message: "Title cannot be longer than 20 characters long" }),
   content: z.string().min(1, { message: "Post content cannot be empty" }),
   imageSrc: z.string().optional(),
@@ -59,6 +59,25 @@ export const NewPostDialog = ({ data }: { data: any }) => {
   //handle react-hook-form submission
   async function handleCreatePost(values: z.infer<typeof postSchema>) {
     console.log(values);
+    try {
+      const response = await fetch("/api/users/create-post", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ payload: values }),
+      });
+      console.log(response);
+      if (response.ok) {
+        //close & reset form
+        postForm.reset();
+        toast("Post created!", {
+          description: "Your post has been published.",
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -148,9 +167,9 @@ export const NewPostDialog = ({ data }: { data: any }) => {
               </div>
             </div>
 
-            <Button type="submit" className="w-full cursor-pointer ">
+            <AlertDialogAction type="submit" className="w-full cursor-pointer">
               Create Post
-            </Button>
+            </AlertDialogAction>
           </form>
         </Form>
 

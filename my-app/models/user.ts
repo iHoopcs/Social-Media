@@ -5,7 +5,7 @@ interface IComment {
   commentContent: string;
 }
 
-interface IPost {
+export interface IPost {
   postedBy: string;
   title: string;
   content: string;
@@ -29,15 +29,12 @@ const CommentSchema = new Schema<IComment>(
   { _id: false } //not querying specific schema
 );
 
-const PostSchema = new Schema<IPost>(
-  {
-    postedBy: { type: String, required: true },
-    title: { type: String, required: true },
-    content: { type: String, required: true },
-    comments: { type: [CommentSchema], default: [] },
-  },
-  { _id: false } //not querying specific schema
-);
+const PostSchema = new Schema<IPost>({
+  postedBy: { type: String, required: true },
+  title: { type: String, required: true },
+  content: { type: String, required: true },
+  comments: { type: [CommentSchema], default: [] },
+});
 
 const UserSchema = new Schema<IUser>(
   {
